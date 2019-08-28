@@ -56,7 +56,7 @@ workflows:
   version: 2.1
   PR Workflow:
     jobs:
-      - Build:
+      - Build
       - Unit Testing:
           requires:
             - Build
