@@ -1,52 +1,107 @@
+#CircleCI API Version
 version: 2.1
+#Defines the overall Jobs for this particular pipeline to be used in workflows or as isolated jobs
 jobs:
+    # Build -- Execute compilation and library linkage as first step
     Build:
         docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "Build Execution"
+            - run: echo "Build Execution";
+            
+    # Unit Testing -- Execute unit tests separate from other executions to track performance
     Unit Testing:
         docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "Unit Test Execution"
+            - run: echo "Running Unit Tests";
+    # Security-Dependency Scanning -- Call out that we are doing OWASP specifically here or Snyk eventually but always ..Dependency Scanning
     OWASP Dependency Scan:
         docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "OWASP Scanning"
-    Container Scan:
+            - run: echo "OWASP Dependency Scanning";
+    # Security-Container Scanning -- Call out that we are doing Anchore specifically here or Snyk eventually but always ..Container Scanning
+    Anchore Container Scan:
         docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "Container Scanning"
-    Docker Build:
+            - run: echo "Scanning Container via Anchore";
+    # Build-Container Image -- Call out what flavor (likely always Docker) and indicate this is the Build of said container/image
+    Docker Image Build:
         docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "Building Docker Image"        
-        
+            - run: echo "Building Docker Image";
+    # Quality-Code Scanning -- Call out what flavor (Sonar presently) and indicate Code Quality Scan
+    Sonar Code Quality Scan:
+        docker:
+            - image: circleci/ruby:2.4.1
+        steps:
+            - checkout
+            - run: echo "Scanning Code Quality via Sonar";
+    # Testing-Contract
+    Contract Testing:
+            docker:
+            - image: circleci/ruby:2.4.1
+        steps:
+            - checkout
+            - run: echo "Running Contract Tests";
+    # Testing-Integration
+    Intergration Testing:
+            docker:
+            - image: circleci/ruby:2.4.1
+        steps:
+            - checkout
+            - run: echo "Running Integration Tests";
+
+
+
+#Define at least 1 workflow        
 workflows:
+    #Version indicates which CircleCI language version is in use
     version: 2.1
+    # Defines a workflow "PR Workflow" to show up in UI
     PR Workflow:
+        # List what specific defined jobs from above are to be run
         jobs:
+            # Job 1 -- Build
             - Build
+            # Job 2a -- Unit Tests (must finish build)
             - Unit Testing:
+                # Defines ordering chain
                 requires:
                     - Build
+            # Job 2b -- OWASP Scan (must finish build)
             - OWASP Dependency Scan:
+                # Defines ordering chain
                 requires:
                     - Build
-            - Docker Build:
+            # Job 3 -- Build Docker Image (must have completed build, unit tests, and owasp scans)
+            - Docker Image Build:
+                # Defines ordering chain
                 requires:
                     - Build
                     - Unit Testing
                     - OWASP Dependency Scan
-            - Container Scan:
+            # Job 4a -- Scan Docker Image created (must finish Image build first)
+            - Anchore Container Scan:
+                # Defines ordering chain
                 requires:
-                    - Docker Build
+                    - Docker Image Build
+            # Job 4b
+            - Contract Testing:
+                # Defines ordering chain
+                requires:
+                    - Docker Image Build
+            # Job 4c
+            - Integration Testing:
+                # Defines ordering chain
+                requires:
+                    - Docker Image Build
+            
