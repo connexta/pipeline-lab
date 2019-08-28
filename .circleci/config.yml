@@ -1,79 +1,79 @@
 version: 2.1
 jobs:
-    Build:
-        docker:
-            - image: circleci/ruby:2.4.1
-        steps:
-            - checkout
-            - run: echo "Build Execution"
-    Unit Testing:
-        docker:
-            - image: circleci/ruby:2.4.1
-        steps:
-            - checkout
-            - run: echo "Running Unit Tests"
-    OWASP Dependency Scan:
-        docker:
-            - image: circleci/ruby:2.4.1
-        steps:
-            - checkout
-            - run: echo "OWASP Dependency Scanning"
-    Anchore Container Scan:
-        docker:
-            - image: circleci/ruby:2.4.1
-        steps:
-            - checkout
-            - run: echo "Scanning Container via Anchore"
-    Docker Image Build:
-        docker:
-            - image: circleci/ruby:2.4.1
-        steps:
-            - checkout
-            - run: echo "Building Docker Image"
-    Sonar Code Quality Scan:
-        docker:
-            - image: circleci/ruby:2.4.1
-        steps:
-            - checkout
-            - run: echo "Scanning Code Quality via Sonar"
-    Contract Testing:
-            docker:
-            - image: circleci/ruby:2.4.1
-        steps:
-            - checkout
-            - run: echo "Running Contract Tests"
-    Intergration Testing:
-            docker:
-            - image: circleci/ruby:2.4.1
-        steps:
-            - checkout
-            - run: echo "Running Integration Tests"
+  Build:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: echo "Build Execution"
+  Unit Testing:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: echo "Running Unit Tests"
+  OWASP Dependency Scan:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: echo "OWASP Dependency Scanning"
+  Anchore Container Scan:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: echo "Scanning Container via Anchore"
+  Docker Image Build:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: echo "Building Docker Image"
+  Sonar Code Quality Scan:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: echo "Scanning Code Quality via Sonar"
+  Contract Testing:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: echo "Running Contract Tests"
+  Intergration Testing:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: echo "Running Integration Tests"
 
 
 
 
 workflows:
-    version: 2.1
-    PR Workflow:
-        jobs:
+  version: 2.1
+  PR Workflow:
+    jobs:
+      - Build:
+      - Unit Testing:
+          requires:
             - Build
-            - Unit Testing:
-                requires:
-                    - Build
-            - OWASP Dependency Scan:
-                requires:
-                    - Build
-            - Docker Image Build:
-                requires:
-                    - Build
-                    - Unit Testing
-                    - OWASP Dependency Scan
-            - Anchore Container Scan:
-                requires:
-                    - Docker Image Build
-            - Contract Testing:
-                requires:
-                    - Docker Image Build
-            - Integration Testing:
-                requires:
-                    - Docker Image Build
+      - OWASP Dependency Scan:
+          requires:
+            - Build
+      - Docker Image Build:
+          requires:
+            - Build
+            - Unit Testing
+            - OWASP Dependency Scan
+      - Anchore Container Scan:
+          requires:
+            - Docker Image Build
+      - Contract Testing:
+          requires:
+            - Docker Image Build
+      - Integration Testing:
+        requires:
+            - Docker Image Build
