@@ -75,5 +75,5 @@ workflows:
           requires:
             - Docker Image Build
       - Integration Testing:
-        requires:
+          requires:
             - Docker Image Build
