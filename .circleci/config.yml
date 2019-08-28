@@ -1,0 +1,52 @@
+version: 2.1
+jobs:
+    Build:
+        docker:
+            - image: circleci/ruby:2.4.1
+        steps:
+            - checkout
+            - run: echo "Build Execution"
+    Unit Testing:
+        docker:
+            - image: circleci/ruby:2.4.1
+        steps:
+            - checkout
+            - run: echo "Unit Test Execution"
+    OWASP Dependency Scan:
+        docker:
+            - image: circleci/ruby:2.4.1
+        steps:
+            - checkout
+            - run: echo "OWASP Scanning"
+    Container Scan:
+        docker:
+            - image: circleci/ruby:2.4.1
+        steps:
+            - checkout
+            - run: echo "Container Scanning"
+    Docker Build:
+        docker:
+            - image: circleci/ruby:2.4.1
+        steps:
+            - checkout
+            - run: echo "Building Docker Image"        
+        
+workflows:
+    version: 2.1
+        PR Workflow:
+            jobs:
+                - Build
+                - Unit Testing:
+                    requires:
+                        - Build
+                - OWASP Dependency Scan:
+                    requires:
+                        - Build
+                - Docker Build:
+                    requires:
+                        - Build
+                        - Unit Testing
+                        - OWASP Dependency Scan
+                - Container Scan:
+                    requires:
+                        - Docker Build
