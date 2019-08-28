@@ -1,79 +1,93 @@
-version: 2.1
-jobs:
-  Build:
+# This configuration pipeline is meant to outline structure and naming standards
+# Author: Jonathan Fontaine
+
+version: 2.1 #CircleCI API Version
+jobs: #Defines the overall Jobs for this particular pipeline to be used in workflows or as isolated jobs
+  Build: # Execute compilation and library linkage as first step
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
       - run: echo "Build Execution"
-  Unit Testing:
+  Unit Testing: # Execute unit tests separate from other executions to track performance
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
       - run: echo "Running Unit Tests"
-  OWASP Dependency Scan:
+  OWASP Dependency Scan: # Security-Dependency Scanning -- Call out that we are doing OWASP specifically here or Snyk eventually but always ..Dependency Scanning
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
       - run: echo "OWASP Dependency Scanning"
-  Anchore Container Scan:
+  Anchore Container Scan: # Security-Container Scanning -- Call out that we are doing Anchore specifically here or Snyk eventually but always ..Container Scanning
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
       - run: echo "Scanning Container via Anchore"
-  Docker Image Build:
+  Docker Image Build: # Build-Container Image -- Call out what flavor (likely always Docker) and indicate this is the Build of said container/image
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
       - run: echo "Building Docker Image"
-  Sonar Code Quality Scan:
+  Sonar Code Quality Scan: # Quality-Code Scanning -- Call out what flavor (Sonar presently) and indicate Code Quality Scan
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
       - run: echo "Scanning Code Quality via Sonar"
-  Contract Testing:
+  Contract Testing: # Testing-Contract
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
       - run: echo "Running Contract Tests"
-  Integration Testing:
+  Integration Testing: # Testing-Integration
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
       - run: echo "Running Integration Tests"
+  Deploy Artifacts: # Deploy artifacts to Nexus or Maven Central
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: echo "Deploying artifacts"
 
-
-
-
+# There should be a minimum of 2 workflows:
+# 1) a PR workflow for vetting through the CICD pipeline PR changes
+# 2) a master workflow for vetting the overall changes out to the public via CICD pipeline
 workflows:
-  version: 2.1
-  PR Workflow:
-    jobs:
-      - Build
-      - Unit Testing:
+  version: 2.1 #Version indicates which CircleCI language version is in use
+  PR Workflow: # Defines a workflow "PR Workflow" to show up in UI
+    jobs: # List what specific defined jobs from above are to be run
+      - Build #Job 1
+      - Unit Testing: #Job 2a
           requires:
             - Build
-      - OWASP Dependency Scan:
+      - OWASP Dependency Scan: #Job 2b
           requires:
             - Build
-      - Docker Image Build:
+      - Docker Image Build: #Job 3
           requires:
             - Build
             - Unit Testing
             - OWASP Dependency Scan
-      - Anchore Container Scan:
+      - Anchore Container Scan: # Job 4a
           requires:
             - Docker Image Build
-      - Contract Testing:
+      - Contract Testing: # Job 4b
           requires:
             - Docker Image Build
-      - Integration Testing:
+      - Integration Testing: #Job 4c
           requires:
             - Docker Image Build
+      - Deploy Artifacts: # Job 5
+          requires:
+            - Anchore Container Scan
+            - Contract Testing
+            - Integration Testing
