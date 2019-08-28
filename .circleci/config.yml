@@ -8,7 +8,7 @@ jobs:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "Build Execution";
+            - run: echo "Build Execution"
             
     # Unit Testing -- Execute unit tests separate from other executions to track performance
     Unit Testing:
@@ -16,49 +16,49 @@ jobs:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "Running Unit Tests";
+            - run: echo "Running Unit Tests"
     # Security-Dependency Scanning -- Call out that we are doing OWASP specifically here or Snyk eventually but always ..Dependency Scanning
     OWASP Dependency Scan:
         docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "OWASP Dependency Scanning";
+            - run: echo "OWASP Dependency Scanning"
     # Security-Container Scanning -- Call out that we are doing Anchore specifically here or Snyk eventually but always ..Container Scanning
     Anchore Container Scan:
         docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "Scanning Container via Anchore";
+            - run: echo "Scanning Container via Anchore"
     # Build-Container Image -- Call out what flavor (likely always Docker) and indicate this is the Build of said container/image
     Docker Image Build:
         docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "Building Docker Image";
+            - run: echo "Building Docker Image"
     # Quality-Code Scanning -- Call out what flavor (Sonar presently) and indicate Code Quality Scan
     Sonar Code Quality Scan:
         docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "Scanning Code Quality via Sonar";
+            - run: echo "Scanning Code Quality via Sonar"
     # Testing-Contract
     Contract Testing:
             docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "Running Contract Tests";
+            - run: echo "Running Contract Tests"
     # Testing-Integration
     Intergration Testing:
             docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "Running Integration Tests";
+            - run: echo "Running Integration Tests"
 
 
 
