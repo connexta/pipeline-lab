@@ -42,7 +42,7 @@ jobs:
     steps:
       - checkout
       - run: echo "Running Contract Tests"
-  Intergration Testing:
+  Integration Testing:
     docker:
       - image: circleci/ruby:2.4.1
     steps:
