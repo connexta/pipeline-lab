@@ -33,20 +33,20 @@ jobs:
         
 workflows:
     version: 2.1
-        PR Workflow:
-            jobs:
-                - Build
-                - Unit Testing:
-                    requires:
-                        - Build
-                - OWASP Dependency Scan:
-                    requires:
-                        - Build
-                - Docker Build:
-                    requires:
-                        - Build
-                        - Unit Testing
-                        - OWASP Dependency Scan
-                - Container Scan:
-                    requires:
-                        - Docker Build
+    PR Workflow:
+        jobs:
+            - Build
+            - Unit Testing:
+                requires:
+                    - Build
+            - OWASP Dependency Scan:
+                requires:
+                    - Build
+            - Docker Build:
+                requires:
+                    - Build
+                    - Unit Testing
+                    - OWASP Dependency Scan
+            - Container Scan:
+                requires:
+                    - Docker Build
