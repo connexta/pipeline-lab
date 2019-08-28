@@ -1,59 +1,50 @@
 #CircleCI API Version
 version: 2.1
 #Defines the overall Jobs for this particular pipeline to be used in workflows or as isolated jobs
-jobs:
-    # Build -- Execute compilation and library linkage as first step
-    Build:
+jobs:    
+    Build: # Execute compilation and library linkage as first step
         docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "Build Execution"
-            
-    # Unit Testing -- Execute unit tests separate from other executions to track performance
-    Unit Testing:
+            - run: echo "Build Execution"               
+    Unit Testing: # Execute unit tests separate from other executions to track performance
         docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
             - run: echo "Running Unit Tests"
-    # Security-Dependency Scanning -- Call out that we are doing OWASP specifically here or Snyk eventually but always ..Dependency Scanning
-    OWASP Dependency Scan:
+    OWASP Dependency Scan: # Security-Dependency Scanning -- Call out that we are doing OWASP specifically here or Snyk eventually but always ..Dependency Scanning
         docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "OWASP Dependency Scanning"
-    # Security-Container Scanning -- Call out that we are doing Anchore specifically here or Snyk eventually but always ..Container Scanning
-    Anchore Container Scan:
+            - run: echo "OWASP Dependency Scanning"    
+    Anchore Container Scan: # Security-Container Scanning -- Call out that we are doing Anchore specifically here or Snyk eventually but always ..Container Scanning
         docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
             - run: echo "Scanning Container via Anchore"
-    # Build-Container Image -- Call out what flavor (likely always Docker) and indicate this is the Build of said container/image
-    Docker Image Build:
+    Docker Image Build: # Build-Container Image -- Call out what flavor (likely always Docker) and indicate this is the Build of said container/image
         docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "Building Docker Image"
-    # Quality-Code Scanning -- Call out what flavor (Sonar presently) and indicate Code Quality Scan
-    Sonar Code Quality Scan:
+            - run: echo "Building Docker Image"    
+    Sonar Code Quality Scan: # Quality-Code Scanning -- Call out what flavor (Sonar presently) and indicate Code Quality Scan
         docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "Scanning Code Quality via Sonar"
-    # Testing-Contract
-    Contract Testing:
+            - run: echo "Scanning Code Quality via Sonar"    
+    Contract Testing: # Testing-Contract
             docker:
             - image: circleci/ruby:2.4.1
         steps:
             - checkout
-            - run: echo "Running Contract Tests"
-    # Testing-Integration
-    Intergration Testing:
+            - run: echo "Running Contract Tests"    
+    Intergration Testing: # Testing-Integration
             docker:
             - image: circleci/ruby:2.4.1
         steps:
