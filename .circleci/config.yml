@@ -4,20 +4,39 @@
 version: 2.1 #CircleCI API Version
 jobs: #Defines the overall Jobs for this particular pipeline to be used in workflows or as isolated jobs
   Build: # Execute compilation and library linkage as first step
-    docker:
+    docker: &image # The '&image' setups up a reference tag to be used by '*image' (see unit tests)
       - image: circleci/openjdk:11-jdk
     steps:
+      - run: &env # does the same as '&image' above and see usage below in unit tests
+          name: Setting environment
+          command: |
+            echo "export DISABLE_DOWNLOAD_PROGRESS_OPTS=-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn" >> $BASH_ENV
+            source $BASH_ENV
       - checkout
       - run:
-          name: Building
+          name: Maven install without tests
           command: |
-            mvn install -B -DskipTests
+            mvn install -B -DskipTests $DISABLE_DOWNLOAD_PROGRESS_OPTS
   Unit Testing: # Execute unit tests separate from other executions to track performance
-    docker:
-      - image: circleci/ruby:2.4.1
+    docker: *image
     steps:
+      - run: *env
       - checkout
-      - run: echo "Running Unit Tests"
+      - run:
+          name: Maven test phase
+          command: |
+            mvn test $DISABLE_DOWNLOAD_PROGRESS_OPTS
+      - run:
+          name: Save Unit Test Results
+          command: |
+            mkdir -p ~/test-results/junit
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+        path: ~/test-results
+      - store_artifacts:
+        path: ~/test-results/junit
+        
   OWASP Dependency Scan: # Security-Dependency Scanning -- Call out that we are doing OWASP specifically here or Snyk eventually but always ..Dependency Scanning
     docker:
       - image: circleci/ruby:2.4.1
