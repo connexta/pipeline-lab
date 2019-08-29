@@ -33,7 +33,7 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
     steps:
       - checkout
       - run: echo "OWASP Dependency Scanning"
-  Anchore Container Scan: # Security-Container Scanning -- Call out that we are doing Anchore specifically here or Snyk eventually but always ..Container Scanning
+   Container Scan: # Security-Container Scanning
     docker:
       - image: circleci/ruby:2.4.1
     steps:
@@ -84,15 +84,15 @@ workflows:
           filters:
             branches:
               ignore: master
-      - OWASP Dependency Scan: #Job 2b
+      - Dependency Scan: #Job 2b
           requires:
             - Build
       - Docker Image Build: #Job 3
           requires:
             - Build
             - Unit Testing
-            - OWASP Dependency Scan
-      - Anchore Container Scan: # Job 4a
+            - Dependency Scan
+      - Container Scan: # Job 4a
           requires:
             - Docker Image Build
       - Contract Testing: # Job 4b
@@ -109,7 +109,7 @@ workflows:
               only: master
       - Deploy Artifacts: # Job 5
           requires:
-            - Anchore Container Scan
+            - Container Scan
             - Contract Testing
             - Integration Testing
           filters:
