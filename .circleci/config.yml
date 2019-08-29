@@ -65,7 +65,7 @@ workflows:
   version: 2.1 #Version indicates which CircleCI language version is in use
   Master Pipeline: # Defines a workflow "PR Workflow" to show up in UI
     triggers:
-      filters:
+      - filters:
         branches:
           only:
             - master
