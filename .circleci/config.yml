@@ -26,14 +26,13 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
           name: Maven test phase
           command: |
             mvn test -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-        
   Dependency Scan: # Security-Dependency Scanning
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
       - run: echo "OWASP Dependency Scanning"
-   Container Scan: # Security-Container Scanning
+  Container Scan: # Security-Container Scanning
     docker:
       - image: circleci/ruby:2.4.1
     steps:
