@@ -63,7 +63,11 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
 # 2) a master workflow for vetting the overall changes out to the public via CICD pipeline
 workflows:
   version: 2.1 #Version indicates which CircleCI language version is in use
-  PR Workflow: # Defines a workflow "PR Workflow" to show up in UI
+  Master Pipeline: # Defines a workflow "PR Workflow" to show up in UI
+    filters:
+      branches:
+        only:
+          - master
     jobs: # List what specific defined jobs from above are to be run
       - Build #Job 1
       - Unit Testing: #Job 2a
