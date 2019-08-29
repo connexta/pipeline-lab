@@ -25,9 +25,9 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
       - run:
           name: Maven test phase
           command: |
-            mvn test $DISABLE_DOWNLOAD_PROGRESS_OPTS
+            mvn test -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
         
-  OWASP Dependency Scan: # Security-Dependency Scanning -- Call out that we are doing OWASP specifically here or Snyk eventually but always ..Dependency Scanning
+  Dependency Scan: # Security-Dependency Scanning
     docker:
       - image: circleci/ruby:2.4.1
     steps:
