@@ -63,18 +63,15 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
 # 2) a master workflow for vetting the overall changes out to the public via CICD pipeline
 workflows:
   version: 2.1 #Version indicates which CircleCI language version is in use
-  Master Pipeline: # Defines a workflow "PR Workflow" to show up in UI
-    triggers:
-      - schedule:
-        filters:
-          branches:
-            only:
-              - master
+  Ion Pipeline: # Defines a workflow "PR Workflow" to show up in UI
     jobs: # List what specific defined jobs from above are to be run
       - Build #Job 1
       - Unit Testing: #Job 2a
           requires:
             - Build
+          filters:
+            branches:
+              ignore: master
       - OWASP Dependency Scan: #Job 2b
           requires:
             - Build
@@ -89,11 +86,20 @@ workflows:
       - Contract Testing: # Job 4b
           requires:
             - Docker Image Build
+          filters:
+            branches:
+              only: master
       - Integration Testing: #Job 4c
           requires:
             - Docker Image Build
+          filters:
+            branches:
+              only: master
       - Deploy Artifacts: # Job 5
           requires:
             - Anchore Container Scan
             - Contract Testing
             - Integration Testing
+          filters:
+            branches:
+              only: master
