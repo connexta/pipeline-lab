@@ -9,9 +9,9 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
     steps:
       - checkout
       - run:
-        name: Building
-        command: |
-          mvn install -B -DskipTests
+          name: Building
+          command: |
+            mvn install -B -DskipTests
   Unit Testing: # Execute unit tests separate from other executions to track performance
     docker:
       - image: circleci/ruby:2.4.1
