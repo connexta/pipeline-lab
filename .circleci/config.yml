@@ -91,31 +91,31 @@ workflows:
       - Dependency Scan: #Job 2b
           requires:
             - Build
-      - Docker Image Build: #Job 3
-          requires:
-            - Build
-            - Unit Testing
-            - Dependency Scan
-      - Container Scan: # Job 4a
-          requires:
-            - Docker Image Build
+      # Job 3 - No container image building for this project
+      # Job 4a - No container scanning for this project
       - Contract Testing: # Job 4b
           requires:
-            - Docker Image Build
+            - Dependency Scan
+            - Unit Testing
           filters:
-            branches:
-              only: master
+              only:
+                - master
+                - /feature.*/
       - Integration Testing: #Job 4c
           requires:
-            - Docker Image Build
+            - Dependency Scan
+            - Unit Testing
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - /feature.*/
       - Deploy Artifacts: # Job 5
           requires:
-            - Container Scan
             - Contract Testing
             - Integration Testing
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - /feature.*/
