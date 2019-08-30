@@ -20,12 +20,13 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
   Unit Testing: # Execute unit tests separate from other executions to track performance
     docker: *image
     steps:
+      - run: *env
       - checkout
       - run:
           name: Maven test phase
           # NOTE:  Cannot suppress mvn downloading because not log lines but stdout
           command: |
-            mvn test -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+            mvn test -B $DISABLE_DOWNLOAD_PROGRESS_OPTS
   Dependency Scan: # Security-Dependency Scanning
     docker:
       - image: circleci/ruby:2.4.1
