@@ -29,15 +29,12 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
           command: |
             mvn test -B $DISABLE_DOWNLOAD_PROGRESS_OPTS
   Dependency Scan: # Security-Dependency Scanning
-    docker:
-      - image: circleci/node:4.8.2
+    docker: *image
     steps:
       - checkout
-      - run: npm install -q
       - snyk/scan:
           fail-on-issues: false
           monitor-on-build: false
-          project: '${CIRCLE_PROJECT_REPO_NAME}/${CIRCLE_BRANCH}-app'
           severity-threshold: high
           token-variable: SNYK_TOKEN
   Container Scan: # Security-Container Scanning
