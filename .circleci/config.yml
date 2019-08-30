@@ -62,7 +62,8 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
             -Dsonar.projectKey=CIRCLE_BRANCH \
             -Dsonar.organization=cx \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.pullrequest.base=master \ 
+            -Dsonar.pullrequest.base=master \
+            -Dsonar.pullreqest.key=CIRCLE_PR_NUMBER\
             -Dsonar.login=MY_SONAR_TOKEN
   Contract Testing: # Testing-Contract
     docker:
