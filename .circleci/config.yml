@@ -98,6 +98,7 @@ workflows:
             - Dependency Scan
             - Unit Testing
           filters:
+            branches:
               only:
                 - master
                 - /feature.*/
