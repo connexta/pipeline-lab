@@ -1,7 +1,9 @@
 # This configuration pipeline is meant to outline structure and naming standards
 # Author: Jonathan Fontaine
-
 version: 2.1 #CircleCI API Version
+orbs:
+  snyk: snyk/snyk@0.0.8
+
 jobs: #Defines the overall Jobs for this particular pipeline to be used in workflows or as isolated jobs
   Build: # Execute compilation and library linkage as first step
     docker: &image # The '&image' setups up a reference tag to be used by '*image' (see unit tests)
@@ -28,10 +30,16 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
             mvn test -B $DISABLE_DOWNLOAD_PROGRESS_OPTS
   Dependency Scan: # Security-Dependency Scanning
     docker:
-      - image: circleci/ruby:2.4.1
+      - image: circleci/node:4.8.2
     steps:
       - checkout
-      - run: echo "OWASP Dependency Scanning"
+      - run: npm install -q
+      - snyk/scan:
+          fail-on-issues: false
+          monitor-on-build: false
+          project: '${CIRCLE_PROJECT_REPO_NAME}/${CIRCLE_BRANCH}-app'
+          severity-threshold: high
+          token-variable: SNYK_TOKEN
   Container Scan: # Security-Container Scanning
     docker:
       - image: circleci/ruby:2.4.1
