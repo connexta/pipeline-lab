@@ -4,24 +4,36 @@
 version: 2.1 #CircleCI API Version
 jobs: #Defines the overall Jobs for this particular pipeline to be used in workflows or as isolated jobs
   Build: # Execute compilation and library linkage as first step
-    docker:
-      - image: circleci/ruby:2.4.1
+    docker: &image # The '&image' setups up a reference tag to be used by '*image' (see unit tests)
+      - image: circleci/openjdk:11-jdk
     steps:
+      - run: &env # does the same as '&image' above and see usage below in unit tests
+          name: Setting environment
+          command: |
+            echo "export DISABLE_DOWNLOAD_PROGRESS_OPTS=-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn" >> $BASH_ENV
+            source $BASH_ENV
       - checkout
-      - run: echo "Build Execution"
+      - run:
+          name: Maven install without tests
+          command: |
+            mvn install -B -DskipTests $DISABLE_DOWNLOAD_PROGRESS_OPTS
   Unit Testing: # Execute unit tests separate from other executions to track performance
-    docker:
-      - image: circleci/ruby:2.4.1
+    docker: *image
     steps:
+      - run: *env
       - checkout
-      - run: echo "Running Unit Tests"
-  OWASP Dependency Scan: # Security-Dependency Scanning -- Call out that we are doing OWASP specifically here or Snyk eventually but always ..Dependency Scanning
+      - run:
+          name: Maven test phase
+          # NOTE:  Cannot suppress mvn downloading because not log lines but stdout
+          command: |
+            mvn test -B $DISABLE_DOWNLOAD_PROGRESS_OPTS
+  Dependency Scan: # Security-Dependency Scanning
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
       - run: echo "OWASP Dependency Scanning"
-  Anchore Container Scan: # Security-Container Scanning -- Call out that we are doing Anchore specifically here or Snyk eventually but always ..Container Scanning
+  Container Scan: # Security-Container Scanning
     docker:
       - image: circleci/ruby:2.4.1
     steps:
@@ -72,15 +84,15 @@ workflows:
           filters:
             branches:
               ignore: master
-      - OWASP Dependency Scan: #Job 2b
+      - Dependency Scan: #Job 2b
           requires:
             - Build
       - Docker Image Build: #Job 3
           requires:
             - Build
             - Unit Testing
-            - OWASP Dependency Scan
-      - Anchore Container Scan: # Job 4a
+            - Dependency Scan
+      - Container Scan: # Job 4a
           requires:
             - Docker Image Build
       - Contract Testing: # Job 4b
@@ -97,7 +109,7 @@ workflows:
               only: master
       - Deploy Artifacts: # Job 5
           requires:
-            - Anchore Container Scan
+            - Container Scan
             - Contract Testing
             - Integration Testing
           filters:
