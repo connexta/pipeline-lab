@@ -64,7 +64,7 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.pullrequest.base=master \
             -Dsonar.pullreqest.key=CIRCLE_PR_NUMBER \
-            -Dsonar.login=MY_SONAR_TOKEN
+            -Dsonar.login=${MY_SONAR_TOKEN}
   Contract Testing: # Testing-Contract
     docker:
       - image: circleci/ruby:2.4.1
