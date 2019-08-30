@@ -23,8 +23,9 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
       - checkout
       - run:
           name: Maven test phase
+          # NOTE:  Cannot suppress mvn downloading because not log lines but stdout
           command: |
-            mvn test
+            mvn test -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
   Dependency Scan: # Security-Dependency Scanning
     docker:
       - image: circleci/ruby:2.4.1
