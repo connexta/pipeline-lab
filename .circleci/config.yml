@@ -57,13 +57,13 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
         # sonar.login is the API token we can use and here is configured for a CircleCI Env Variable
         # sonar.organization "cx" is the Connexta Organization
       - run:
-        command: |
-          mvn verify sonar:sonar \
-          -Dsonar.projectKey=CIRCLE_BRANCH \
-          -Dsonar.organization=cx \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.pullrequest.base=master \ 
-          -Dsonar.login=MY_SONAR_TOKEN
+          command: |
+            mvn verify sonar:sonar \
+            -Dsonar.projectKey=CIRCLE_BRANCH \
+            -Dsonar.organization=cx \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.pullrequest.base=master \ 
+            -Dsonar.login=MY_SONAR_TOKEN
   Contract Testing: # Testing-Contract
     docker:
       - image: circleci/ruby:2.4.1
