@@ -24,7 +24,6 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
       - checkout
       - run:
           name: Maven test phase
-          # NOTE:  Cannot suppress mvn downloading because not log lines but stdout
           command: |
             mvn test -B $DISABLE_DOWNLOAD_PROGRESS_OPTS
   Dependency Scan: # Security-Dependency Scanning
