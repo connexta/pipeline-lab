@@ -59,17 +59,6 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
         # CircleCI Env. Variable CIRCLE_PULL_REQUEST only works for "forked" repos
       - run:
           command: |
-            if [[ ! -z $CIRCLE_PULL_REQUEST ]];
-            then
-              mvn verify sonar:sonar \
-              -Dsonar.projectKey=${CIRCLE_PROJECT_REPONAME} \
-              -Dsonar.organization=cx \
-              -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.pullrequest.base=master \
-              -Dsonar.pullrequest.key=${CIRCLE_PULL_REQUEST##*/} \
-              -Dsonar.pullrequest.branch=${CIRCLE_BRANCH} \
-              -Dsonar.login=${MY_SONAR_TOKEN}
-            fi
               mvn verify sonar:sonar \
               -Dsonar.projectKey=${CIRCLE_PROJECT_REPONAME} \
               -Dsonar.organization=cx \
