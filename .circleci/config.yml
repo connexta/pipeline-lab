@@ -52,20 +52,45 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
   Sonar Code Quality Scan: # Quality-Code Scanning -- Call out what flavor (Sonar presently) and indicate Code Quality Scan
     docker: *image
     steps:
+    # PR Analysis cannot have branch.target parameter
+    # PR Analysis requires "pullrequest.provider" & "pullrequest.github.reposotiry" to fire decorators back to GitHub
+    # CircleCI limit:  no organization name for easier pointing to github.repository value
+      - run:
+          name: Determining Sonar and Branch Configuration
+          command: |
+              SONAR_PARAMS='';
+              if [[ ! -z $CIRCLE_PULL_REQUEST ]];
+              then
+                SONAR_PARAMS="${SONAR_PARAMS} \
+                -Dsonar.pullrequest.key=${CIRCLE_PULL_REQUEST##*/} \
+                -Dsonar.pullrequest.base=master \
+                -Dsonar.pullrequest.branch=${CIRCLE_BRANCH} \
+                -Dsonar.pullrequest.provider=GitHub
+                -Dsonar.pullrequest.github.repository=connexta/${CIRCLE_PROJECT_REPONAME}"
+              fi
+              if [[ ${CIRCLE_BRANCH} != 'master' && -z $CIRCLE_PULL_REQUEST ]];
+              then
+                SONAR_PARAMS="${SONAR_PARAMS} \
+                -Dsonar.branch.target=master \
+                -Dsonar.branch.name=${CIRCLE_BRANCH}"
+              fi
+              echo "export SONAR_PARAMS='${SONAR_PARAMS}'" >> $BASH_ENV
+              source $BASH_ENV
       - checkout
         # sonar.pullrequest.base should be your default branch but may not be "master"
         # sonar.login is the API token we can use and here is configured for a CircleCI Env Variable
         # sonar.organization "cx" is the Connexta Organization
         # CircleCI Env. Variable CIRCLE_PULL_REQUEST only works for "forked" repos
       - run:
+          name: Scanning
           command: |
-              mvn verify sonar:sonar \
-              -Dsonar.projectKey=${CIRCLE_PROJECT_REPONAME} \
-              -Dsonar.organization=cx \
-              -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.login=${PIPELINE_SONAR_TOKEN} \
-              -Dsonar.branch.target=master \
-              -Dsonar.branch.name=${CIRCLE_BRANCH}
+            echo $SONAR_PARAMS;
+            mvn verify sonar:sonar \
+            -Dsonar.projectKey=${CIRCLE_PROJECT_REPONAME} \
+            -Dsonar.organization=cx \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${PIPELINE_SONAR_TOKEN} \
+            $SONAR_PARAMS;
   Contract Testing: # Testing-Contract
     docker:
       - image: circleci/ruby:2.4.1
