@@ -62,7 +62,7 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
             if [[ ! -z $CIRCLE_PULL_REQUEST ]];
             then
               mvn verify sonar:sonar \
-              -Dsonar.projectKey=${CIRCLE_BRANCH} \
+              -Dsonar.projectKey=${CIRCLE_PROJECT_REPONAME} \
               -Dsonar.organization=cx \
               -Dsonar.host.url=https://sonarcloud.io \
               -Dsonar.pullrequest.base=master \
@@ -71,11 +71,11 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
               -Dsonar.login=${MY_SONAR_TOKEN}
             fi
               mvn verify sonar:sonar \
-              -Dsonar.projectKey=${CIRCLE_BRANCH} \
+              -Dsonar.projectKey=${CIRCLE_PROJECT_REPONAME} \
               -Dsonar.organization=cx \
               -Dsonar.host.url=https://sonarcloud.io \
               -Dsonar.login=${MY_SONAR_TOKEN} \
-              -Dsonar.branch.target=${CIRCLE_BRANCH} \
+              -Dsonar.branch.target=master \
               -Dsonar.branch.name=${CIRCLE_BRANCH}
   Contract Testing: # Testing-Contract
     docker:
