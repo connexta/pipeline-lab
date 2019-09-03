@@ -53,6 +53,7 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
     docker: *image
     steps:
     # PR Analysis cannot have branch.target parameter
+    # PR Analysis requires sonar.pullrequest.provider to fire decorators back to GitHub
       - run:
           name: Determining Sonar and Branch Configuration
           command: |
@@ -62,7 +63,8 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
                 SONAR_PARAMS="${SONAR_PARAMS} \
                 -Dsonar.pullrequest.key=${CIRCLE_PULL_REQUEST##*/} \
                 -Dsonar.pullrequest.base=master \
-                -Dsonar.pullrequest.branch=${CIRCLE_BRANCH}"
+                -Dsonar.pullrequest.branch=${CIRCLE_BRANCH} \
+                -Dsonar.pullrequest.provider=GitHub"
               fi
               if [[ ${CIRCLE_BRANCH} != 'master' && -z $CIRCLE_PULL_REQUEST ]];
               then
