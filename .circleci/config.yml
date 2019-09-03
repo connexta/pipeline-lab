@@ -69,7 +69,7 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
                 -Dsonar.branch.target=master \
                 -Dsonar.branch.name=${CIRCLE_BRANCH}"
               fi
-              echo "export SONAR_PARAMS=${SONAR_PARAMS}" >> $BASE_ENV
+              echo "export SONAR_PARAMS=${SONAR_PARAMS}" >> $BASH_ENV
               source $BASH_ENV
       - checkout
         # sonar.pullrequest.base should be your default branch but may not be "master"
