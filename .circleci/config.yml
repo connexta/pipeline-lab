@@ -43,8 +43,6 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
     steps:
       - checkout
       - run: echo "Scanning Container via Anchore"
-      - run: echo ${CIRCLE_BRANCH}
-      - run: echo ${CIRCLE_PROJECT_REPONAME}
   Docker Image Build: # Build-Container Image -- Call out what flavor (likely always Docker) and indicate this is the Build of said container/image
     docker:
       - image: circleci/ruby:2.4.1
@@ -61,7 +59,7 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
         # CircleCI Env. Variable CIRCLE_PULL_REQUEST only works for "forked" repos
       - run:
           command: |
-              mvn sonar:sonar \
+              mvn verify sonar:sonar \
               -Dsonar.projectKey=${CIRCLE_PROJECT_REPONAME} \
               -Dsonar.organization=cx \
               -Dsonar.host.url=https://sonarcloud.io \
