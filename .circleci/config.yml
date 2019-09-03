@@ -63,7 +63,7 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
                 -Dsonar.pullrequest.base=master \
                 -Dsonar.pullrequest.branch=${CIRCLE_BRANCH}"
               fi
-              if [ $CIRCLE_BRANCH != master]
+              if [[ ${CIRCLE_BRANCH} != 'master' ]];
               then
                 SONAR_PARAMS="${SONAR_PARAMS} \
                 -Dsonar.branch.target=master \
