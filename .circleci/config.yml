@@ -69,7 +69,8 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
                 -Dsonar.branch.target=master \
                 -Dsonar.branch.name=${CIRCLE_BRANCH}"
               fi
-              echo $SONAR_PARAMS
+              echo "export SONAR_PARAMS=${SONAR_PARAMS}" >> $BASE_ENV
+              source $BASH_ENV
       - checkout
         # sonar.pullrequest.base should be your default branch but may not be "master"
         # sonar.login is the API token we can use and here is configured for a CircleCI Env Variable
@@ -78,14 +79,13 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
       - run:
           name: Scanning
           command: |
+            echo $SONAR_PARAMS;
             mvn verify sonar:sonar \
             -Dsonar.projectKey=${CIRCLE_PROJECT_REPONAME} \
             -Dsonar.organization=cx \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${PIPELINE_SONAR_TOKEN} \
             $SONAR_PARAMS;
-            echo $SONAR_PARAMS
-
   Contract Testing: # Testing-Contract
     docker:
       - image: circleci/ruby:2.4.1
