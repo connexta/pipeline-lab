@@ -52,6 +52,7 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
   Sonar Code Quality Scan: # Quality-Code Scanning -- Call out what flavor (Sonar presently) and indicate Code Quality Scan
     docker: *image
     steps:
+    # PR Analysis cannot have branch.target parameter
       - run:
           name: Determining Sonar and Branch Configuration
           command: |
@@ -63,7 +64,7 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
                 -Dsonar.pullrequest.base=master \
                 -Dsonar.pullrequest.branch=${CIRCLE_BRANCH}"
               fi
-              if [[ ${CIRCLE_BRANCH} != 'master' ]];
+              if [[ ${CIRCLE_BRANCH} != 'master' && -z $CIRCLE_PULL_REQUEST ]];
               then
                 SONAR_PARAMS="${SONAR_PARAMS} \
                 -Dsonar.branch.target=master \
