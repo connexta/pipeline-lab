@@ -56,6 +56,7 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
         # sonar.pullrequest.base should be your default branch but may not be "master"
         # sonar.login is the API token we can use and here is configured for a CircleCI Env Variable
         # sonar.organization "cx" is the Connexta Organization
+        # CircleCI Env. Variable CIRCLE_PULL_REQUEST only works for "forked" repos
       - run:
           command: |
             mvn verify sonar:sonar \
@@ -63,7 +64,7 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
             -Dsonar.organization=cx \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.pullrequest.base=master \
-            -Dsonar.pullrequest.key=${CIRCLE_PULL_REQUEST} \            
+            -Dsonar.pullrequest.key=${CIRCLE_PULL_REQUEST##*/} \
             -Dsonar.pullrequest.branch=${CIRCLE_BRANCH} \
             -Dsonar.login=${MY_SONAR_TOKEN}
   Contract Testing: # Testing-Contract
