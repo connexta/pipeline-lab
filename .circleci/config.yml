@@ -18,7 +18,7 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
       - run:
           name: Maven install without tests
           command: |
-            mvn install -B -DskipTests $DISABLE_DOWNLOAD_PROGRESS_OPTS
+            ./gradlew install -B -DskipTests $DISABLE_DOWNLOAD_PROGRESS_OPTS
   Unit Testing: # Execute unit tests separate from other executions to track performance
     docker: *image
     steps:
@@ -27,7 +27,7 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
       - run:
           name: Maven test phase
           command: |
-            mvn test -B $DISABLE_DOWNLOAD_PROGRESS_OPTS
+            ./gradlew test -B $DISABLE_DOWNLOAD_PROGRESS_OPTS
   Dependency Scan: # Security-Dependency Scanning
     docker: *image
     steps:
@@ -85,7 +85,7 @@ jobs: #Defines the overall Jobs for this particular pipeline to be used in workf
           name: Scanning
           command: |
             echo $SONAR_PARAMS;
-            mvn verify sonar:sonar \
+            ./gradlew verify sonar:sonar \
             -Dsonar.projectKey=${CIRCLE_PROJECT_REPONAME} \
             -Dsonar.organization=cx \
             -Dsonar.host.url=https://sonarcloud.io \
