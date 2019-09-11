@@ -1,16 +1,18 @@
 package com.connexta.lab.tests;
 
 // Required for Log4j2
+
+import java.net.MalformedURLException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-// Required for Test Execution
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.net.MalformedURLException;
+// Required for Test Execution
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -26,9 +28,9 @@ public class BuildPipelineMonitorTest {
 
   @Test
   public void loggerConfiguration() {
-//    LOGGER.debug("Debug Message !");
-//    LOGGER.info("Info Message !");
-//    LOGGER.error("Error Message !");
+    //    LOGGER.debug("Debug Message !");
+    //    LOGGER.info("Info Message !");
+    //    LOGGER.error("Error Message !");
   }
 
   @Test

@@ -2,7 +2,7 @@
 <Configuration status="WARN" monitorInterval="30">
     <Properties>
         <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%C] %p - %m%n</Property>
-        <Property name="APP_LOG_ROOT">p:/logs/</Property>
+        <Property name="APP_LOG_ROOT">p:/logs</Property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT" follow="true">
@@ -10,8 +10,8 @@
         </Console>
 
         <RollingFile name="appLog"
-                     fileName="${APP_LOG_ROOT}/BuildPipelineMonitorTest/test.log"
-                     filePattern="${APP_LOG_ROOT}/BuildPipelineMonitorTest/test-%d{yyyy-MM-dd}-%i.log">
+                     fileName="${APP_LOG_ROOT}/BuildPipelineMonitor/pipeline-monitor.log"
+                     filePattern="${APP_LOG_ROOT}/BuildPipelineMonitor/application-%d{yyyy-MM-dd}-%i.log">
             <PatternLayout pattern="${LOG_PATTERN}" />
             <Policies>
                 <SizeBasedTriggeringPolicy size="19500KB" />
@@ -21,15 +21,13 @@
 
     </Appenders>
     <Loggers>
-
-        <Logger name="com.connexta.lab.logger" additivity="false">
+        <Logger name="PipelineMonitorLogger" level="info">
             <AppenderRef ref="appLog" />
             <AppenderRef ref="Console" />
         </Logger>
-
-        <Root level="info">
-            <AppenderRef ref="Console" level="warn" />
-            <AppenderRef ref="appLog" />
+        <Root level="debug">
+            <AppenderRef ref="Console" level="info" />
+            <AppenderRef ref="appLog" level="debug"/>
         </Root>
     </Loggers>
 </Configuration>

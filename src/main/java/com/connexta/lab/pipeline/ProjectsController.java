@@ -1,11 +1,12 @@
 package com.connexta.lab.pipeline;
 
-import com.connexta.lab.circleci.CircleCIClient;
-import com.connexta.lab.circleci.api.CircleCIProject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.connexta.lab.circleci.CircleCIClient;
+import com.connexta.lab.circleci.api.CircleCIProject;
 
 @Controller
 public class ProjectsController {
@@ -20,6 +21,6 @@ public class ProjectsController {
   @ResponseBody
   public ResponseEntity<CircleCIProject[]> fetchProjects() {
     ResponseEntity<CircleCIProject[]> response = this.circleCIClient.fetchProjects();
-    return ResponseEntity.ok().eTag(response.getHeaders().getETag()).body(response.getBody());
+    return ResponseEntity.ok().body(response.getBody());
   }
 }

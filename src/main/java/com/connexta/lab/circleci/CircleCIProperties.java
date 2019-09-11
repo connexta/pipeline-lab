@@ -1,15 +1,13 @@
 package com.connexta.lab.circleci;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import javax.validation.constraints.Pattern;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("circleci")
 public class CircleCIProperties {
 
-  /**
-   * CircleCI private access token "user:token"
-   */
+  /** CircleCI User API access token "circle_ci_api_token:" */
   @Pattern(regexp = "\\w+:\\w+")
   private String token;
 
