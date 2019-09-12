@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.connexta.lab</groupId>
-    <artifactId>spring-boot-docker</artifactId>
+    <artifactId>pipeline-monitor-circleci</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <name>Docker Pipeline Lab Example</name>
@@ -19,6 +19,7 @@
     </developers>
 
     <properties>
+        <dockerhub.userId>jrfontaine</dockerhub.userId>
         <springboot.version>2.1.7.RELEASE</springboot.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -40,7 +41,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- Bundles a number of dependent libraries for RESTful APIs and web applications -->
+        <!--
+           Bundles a number of dependent libraries for REST APIs and web applications
+           - This bundles the com.fasterxml.jackson libraries which assist with JSON de-serializing
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -132,19 +136,48 @@
                     <version>0.8.4</version>
                 </plugin>
                 <!--END: these were added to support SonarCloud scanning -->
+                <!--START: This is simply required to compile the code -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.6.1</version>
+                    <configuration>
+                        <source>8</source>
+                        <target>8</target>
+                    </configuration>
+                </plugin>
+                <!--END: This is simply required to compile the code -->
+                <!--START: This is required to build a docker image -->
+                <plugin>
+                    <groupId>com.google.cloud.tools</groupId>
+                    <artifactId>jib-maven-plugin</artifactId>
+                    <!-- this was the latest one available on 9/11/2019 -->
+                    <version>1.5.1</version>
+                    <configuration>
+                        <!-- The base image we are going to use -->
+                        <from>
+                            <!-- Original image
+                                - This image was recommended on DZone HowTo
+                                - Since this is a Java8 app, the base seems ok
+                                - Alpine images are minimalistic int his case
+                            -->
+                            <image>openjdk:8u171-alpine</image>
+                        </from>
+                        <to>
+                            <!-- Destination
+                                part 1: Docker Hub space
+                                part 2: Image name once created
+                                part 3: Image version once created
+                            -->
+                            <image>${dockerhub.userId}/${project.artifactId}:${project.version}</image>
+                        </to>
+                        <!-- Setup some in the container properties -->
+                    </configuration>
+
+                </plugin>
+                <!--END: This is required to build a docker image -->
             </plugins>
         </pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
-            </plugin>
-        </plugins>
     </build>
 
     <!--Profile was configured to support SonarCloud scanning -->

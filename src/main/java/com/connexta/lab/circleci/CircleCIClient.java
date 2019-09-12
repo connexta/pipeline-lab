@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
-import com.connexta.lab.circleci.api.CircleCIProject;
+import com.connexta.lab.circleci.api.projects.C2IProject;
 import com.google.common.base.Charsets;
 import com.google.common.net.HttpHeaders;
 
@@ -41,9 +41,9 @@ public class CircleCIClient {
   }
 
   /** Call Server for projects JSON */
-  public ResponseEntity<CircleCIProject[]> fetchProjects() {
+  public ResponseEntity<C2IProject[]> fetchProjects() {
     LOGGER.debug("Starting to fetch Projects...");
-    return this.restTemplate.getForEntity(PROJECTS_URL, CircleCIProject[].class);
+    return this.restTemplate.getForEntity(PROJECTS_URL, C2IProject[].class);
   }
 
   /**

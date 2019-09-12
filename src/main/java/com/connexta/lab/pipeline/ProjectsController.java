@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.connexta.lab.circleci.CircleCIClient;
-import com.connexta.lab.circleci.api.CircleCIProject;
+import com.connexta.lab.circleci.api.projects.C2IProject;
 
 @Controller
 public class ProjectsController {
@@ -19,8 +19,8 @@ public class ProjectsController {
 
   @GetMapping("/projects")
   @ResponseBody
-  public ResponseEntity<CircleCIProject[]> fetchProjects() {
-    ResponseEntity<CircleCIProject[]> response = this.circleCIClient.fetchProjects();
+  public ResponseEntity<C2IProject[]> fetchProjects() {
+    ResponseEntity<C2IProject[]> response = this.circleCIClient.fetchProjects();
     return ResponseEntity.ok().body(response.getBody());
   }
 }
