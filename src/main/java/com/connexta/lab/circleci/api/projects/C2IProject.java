@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class C2IProject {
-  Logger LOGGER = LogManager.getLogger(C2IProject.class);
+  private static final Logger LOGGER = LogManager.getLogger(C2IProject.class);
   // Authentication information
   private final String username;
   // Version control information
@@ -21,9 +21,7 @@ public class C2IProject {
   private final String language;
   // CircleCI specific information
   private final boolean following;
-  //  TODO @j-fontaine - Implement branches
-  //  private List<C2IBranch> branches;
-  //  TODO @j-fontaine - Implement feature flags
+  private Map<String,C2IBranch> branches;
   private List<C2IFeatureFlag> featureFlags;
 
   public C2IProject(
@@ -32,14 +30,15 @@ public class C2IProject {
       @JsonProperty("vcs_url") String vcsURL,
       @JsonProperty("reponame") String repoName,
       @JsonProperty("language") String language,
-      @JsonProperty("following") Boolean followingBool) {
+      @JsonProperty("following") Boolean followingBool,
+      @JsonProperty("branches") Map<String,C2IBranch> branches) {
     this.username = username;
     this.vcsType = vcsType;
     this.vcsURL = vcsURL;
     this.repoName = repoName;
     this.language = language;
-    this.following = followingBool.booleanValue();
-    //    this.branches = new ArrayList<C2IBranch>();
+    this.following = followingBool;
+    this.branches = branches;
   }
 
   public String getUsername() {
@@ -70,15 +69,13 @@ public class C2IProject {
     return featureFlags;
   }
 
-  @JsonProperty("branches")
-  private void unpackBranches(Map<String, Object> branch) {
-    // branches list already initialized in constructor
-
+  public Map<String,C2IBranch> getBranches() {
+    return branches;
   }
 
   @JsonProperty("feature_flags")
   private void unpackFeatureFlags(Map<String, Object> flags) {
-    this.featureFlags = new ArrayList<C2IFeatureFlag>();
+    this.featureFlags = new ArrayList<>();
     for (Map.Entry<String, Object> entry : flags.entrySet()) {
       // Saw "fleet": null 2019-09-12 @j-fontaine, ignoring those flags
       if (entry.getValue() != null) {
